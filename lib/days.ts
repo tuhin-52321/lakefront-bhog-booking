@@ -78,22 +78,14 @@ export const DAYS: DayDef[] = [
 export const MENU_NOTE = "tentative — may change";
 
 // 19 Oct is a free Bhog day (no booking, no payment) — separate from the
-// paid, bookable DAYS above. `canceled` items are still shown, struck
-// through, so people know what was planned and dropped rather than being
-// surprised when it's missing.
-export type FreeMenuItem = { name: string; canceled?: boolean };
-
+// paid, bookable DAYS above. It sits chronologically between "ashtami"
+// (18 Oct) and "nabami" (20 Oct) in DAYS, so the UI inserts it there rather
+// than always showing it first. Bandhakopir Tarkari was planned but has
+// been canceled, so it's left out of this list entirely.
 export const FREE_BHOG_DAY = {
   label: "Mon, 19 Oct",
-  menu: [
-    { name: "Khichuri" },
-    { name: "Labra" },
-    { name: "Bandhakopir Tarkari", canceled: true },
-    { name: "Beguni" },
-    { name: "Mango Chutney" },
-    { name: "Papad" },
-    { name: "Gulab Jamun" },
-  ] as FreeMenuItem[],
+  afterDayKey: "ashtami", // render this free-day card right after this DAYS entry
+  menu: ["Khichuri", "Labra", "Beguni", "Mango Chutney", "Papad", "Gulab Jamun"],
 };
 
 // Short, plain-language descriptions for dishes that first-time readers may

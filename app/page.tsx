@@ -153,31 +153,6 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="card">
-        <div className="card-header">
-          <span className="free-badge">FREE</span> Bhog — {FREE_BHOG_DAY.label}
-        </div>
-        <div className="card-body">
-          <p>
-            Bhog on {FREE_BHOG_DAY.label} is{" "}
-            <strong>free for everyone</strong> — no booking and no payment
-            needed for this day. Just come by outside Party Hall 2 from
-            1:00 PM.
-          </p>
-          <ul className="free-bhog-menu">
-            {FREE_BHOG_DAY.menu.map((item) => (
-              <li key={item.name} className={item.canceled ? "canceled" : ""}>
-                {item.name}
-                {item.canceled ? " — canceled" : ""}
-              </li>
-            ))}
-          </ul>
-          <p className="hint" style={{ marginTop: 10, marginBottom: 0 }}>
-            Menu is {MENU_NOTE}.
-          </p>
-        </div>
-      </div>
-
       <div className="card" ref={detailsRef}>
         <div className="card-header">Your details</div>
         <div className="card-body">
@@ -245,53 +220,82 @@ export default function Page() {
           {DAYS.map((d) => {
             const count = plates[d.key] || 0;
             return (
-              <div className="day-card" key={d.key}>
-                <div className="day-head">
-                  <p className="day-title">{d.label}</p>
-                  <p className="day-price">Price: Rs.{PRICE} per plate</p>
-                  <p className="day-menu">Menu: {d.menu.join(", ")} ({MENU_NOTE})</p>
-                  <details className="menu-glossary">
-                    <summary>What&apos;s on the menu?</summary>
-                    <ul>
-                      {d.menu.map((item) => (
-                        <li key={item}>
-                          <strong>{item}</strong>
-                          {DISH_GLOSSARY[item] ? ` — ${DISH_GLOSSARY[item]}` : ""}
-                        </li>
-                      ))}
-                    </ul>
-                  </details>
-                </div>
-                <div className="day-body">
-                  <div className="stepper">
-                    <button
-                      type="button"
-                      onClick={() => setPlate(d.key, count - 1)}
-                      disabled={count <= 0}
-                      aria-label={`Decrease plates for ${d.label}`}
-                    >
-                      −
-                    </button>
-                    <div className={`count ${count === 0 ? "skip" : ""}`}>
-                      {count === 0
-                        ? "Do not want this day"
-                        : `${count} plate${count > 1 ? "s" : ""}`}
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setPlate(d.key, count + 1)}
-                      disabled={count >= 20}
-                      aria-label={`Increase plates for ${d.label}`}
-                    >
-                      +
-                    </button>
+              <div key={d.key}>
+                <div className="day-card">
+                  <div className="day-head">
+                    <p className="day-title">{d.label}</p>
+                    <p className="day-price">Price: Rs.{PRICE} per plate</p>
+                    <p className="day-menu">Menu: {d.menu.join(", ")} ({MENU_NOTE})</p>
+                    <details className="menu-glossary">
+                      <summary>What&apos;s on the menu?</summary>
+                      <ul>
+                        {d.menu.map((item) => (
+                          <li key={item}>
+                            <strong>{item}</strong>
+                            {DISH_GLOSSARY[item] ? ` — ${DISH_GLOSSARY[item]}` : ""}
+                          </li>
+                        ))}
+                      </ul>
+                    </details>
                   </div>
-                  {count > 0 && (
-                    <div className="day-amount">
-                      {count} × Rs.{PRICE} = Rs.{count * PRICE}
+                  <div className="day-body">
+                    <div className="stepper">
+                      <button
+                        type="button"
+                        onClick={() => setPlate(d.key, count - 1)}
+                        disabled={count <= 0}
+                        aria-label={`Decrease plates for ${d.label}`}
+                      >
+                        −
+                      </button>
+                      <div className={`count ${count === 0 ? "skip" : ""}`}>
+                        {count === 0
+                          ? "Do not want this day"
+                          : `${count} plate${count > 1 ? "s" : ""}`}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setPlate(d.key, count + 1)}
+                        disabled={count >= 20}
+                        aria-label={`Increase plates for ${d.label}`}
+                      >
+                        +
+                      </button>
                     </div>
-                  )}
+                    {count > 0 && (
+                      <div className="day-amount">
+                        {count} × Rs.{PRICE} = Rs.{count * PRICE}
+                      </div>
+                    )}
+                  </div>
                 </div>
+                {d.key === FREE_BHOG_DAY.afterDayKey && (
+                  <div className="day-card free-day-card">
+                    <div className="day-head">
+                      <p className="day-title">
+                        <span className="free-badge">FREE</span>{" "}
+                        {FREE_BHOG_DAY.label}
+                      </p>
+                      <p className="day-price">
+                        Free for everyone — no booking or payment needed
+                      </p>
+                      <p className="day-menu">
+                        Menu: {FREE_BHOG_DAY.menu.join(", ")} ({MENU_NOTE})
+                      </p>
+                      <details className="menu-glossary">
+                        <summary>What&apos;s on the menu?</summary>
+                        <ul>
+                          {FREE_BHOG_DAY.menu.map((item) => (
+                            <li key={item}>
+                              <strong>{item}</strong>
+                              {DISH_GLOSSARY[item] ? ` — ${DISH_GLOSSARY[item]}` : ""}
+                            </li>
+                          ))}
+                        </ul>
+                      </details>
+                    </div>
+                  </div>
+                )}
               </div>
             );
           })}
