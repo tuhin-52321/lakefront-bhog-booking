@@ -82,8 +82,9 @@ export const MENU_NOTE = "tentative — may change";
 // (18 Oct) and "nabami" (20 Oct) in DAYS, so the UI inserts it there rather
 // than always showing it first. Bandhakopir Tarkari was planned but has
 // been canceled, so it's left out of this list entirely.
+// Tithi-wise, 19 Oct falls at the Ashtami–Navami junction — Sandhi Puja.
 export const FREE_BHOG_DAY = {
-  label: "Mon, 19 Oct",
+  label: "Mon, 19 Oct — Sandhi Puja",
   afterDayKey: "ashtami", // render this free-day card right after this DAYS entry
   menu: ["Khichuri", "Labra", "Beguni", "Mango Chutney", "Papad", "Gulab Jamun"],
 };
