@@ -77,6 +77,25 @@ export const DAYS: DayDef[] = [
 // Menus are tentative and may change closer to the day.
 export const MENU_NOTE = "tentative — may change";
 
+// 19 Oct is a free Bhog day (no booking, no payment) — separate from the
+// paid, bookable DAYS above. `canceled` items are still shown, struck
+// through, so people know what was planned and dropped rather than being
+// surprised when it's missing.
+export type FreeMenuItem = { name: string; canceled?: boolean };
+
+export const FREE_BHOG_DAY = {
+  label: "Mon, 19 Oct",
+  menu: [
+    { name: "Khichuri" },
+    { name: "Labra" },
+    { name: "Bandhakopir Tarkari", canceled: true },
+    { name: "Beguni" },
+    { name: "Mango Chutney" },
+    { name: "Papad" },
+    { name: "Gulab Jamun" },
+  ] as FreeMenuItem[],
+};
+
 // Short, plain-language descriptions for dishes that first-time readers may
 // not recognise by name, shown as an optional "What's on the menu?" glossary
 // under each day's dish list. Not every dish needs one — keep this to items
@@ -103,6 +122,12 @@ export const DISH_GLOSSARY: Record<string, string> = {
   "Veg Chop": "Spiced vegetable croquette, breaded and fried.",
   "Mishti Doi": "Sweetened, set yogurt — a classic Bengali dessert.",
   Lengcha: "Elongated, soft milk-based sweet soaked in sugar syrup.",
+  Khichuri: "Rice and lentils cooked together with spices — soft and comforting.",
+  Labra: "Mixed-vegetable curry, a classic khichuri side.",
+  "Bandhakopir Tarkari": "A light cabbage curry.",
+  Beguni: "Deep-fried, batter-coated eggplant slices.",
+  "Mango Chutney": "Sweet-and-tangy mango chutney.",
+  "Gulab Jamun": "Soft, deep-fried milk-solid balls soaked in sugar syrup.",
 };
 
 export const BANK_DETAILS = {

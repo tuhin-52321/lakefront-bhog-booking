@@ -7,6 +7,7 @@ import {
   BANK_DETAILS,
   DISH_GLOSSARY,
   MENU_NOTE,
+  FREE_BHOG_DAY,
   PlateSelection,
   totalPlates,
   totalAmount,
@@ -149,6 +150,31 @@ export default function Page() {
             cannot be used to claim Bhog on a different day — even if it
             wasn&apos;t used on the day it was booked for.
           </div>
+        </div>
+      </div>
+
+      <div className="card">
+        <div className="card-header">
+          <span className="free-badge">FREE</span> Bhog — {FREE_BHOG_DAY.label}
+        </div>
+        <div className="card-body">
+          <p>
+            Bhog on {FREE_BHOG_DAY.label} is{" "}
+            <strong>free for everyone</strong> — no booking and no payment
+            needed for this day. Just come by outside Party Hall 2 from
+            1:00 PM.
+          </p>
+          <ul className="free-bhog-menu">
+            {FREE_BHOG_DAY.menu.map((item) => (
+              <li key={item.name} className={item.canceled ? "canceled" : ""}>
+                {item.name}
+                {item.canceled ? " — canceled" : ""}
+              </li>
+            ))}
+          </ul>
+          <p className="hint" style={{ marginTop: 10, marginBottom: 0 }}>
+            Menu is {MENU_NOTE}.
+          </p>
         </div>
       </div>
 
