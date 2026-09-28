@@ -10,6 +10,7 @@ import {
   PlateSelection,
   totalPlates,
   totalAmount,
+  buildUpiPayUrl,
 } from "@/lib/days";
 
 type Details = {
@@ -301,9 +302,27 @@ export default function Page() {
           </table>
 
           <p style={{ marginTop: 18, marginBottom: 6 }}>
-            Pay <strong>Rs.{amountTotal}</strong> by any UPI app by scanning
-            the QR code below, or by bank transfer:
+            Pay <strong>Rs.{amountTotal}</strong> by any UPI app — tap the
+            button below on your phone, or scan the QR code — or by bank
+            transfer:
           </p>
+          {amountTotal > 0 && (
+            <div className="upi-pay-wrap">
+              <a
+                className="btn btn-primary upi-pay-btn"
+                href={buildUpiPayUrl(
+                  amountTotal,
+                  `Bhog booking${details.flat.trim() ? " - Flat " + details.flat.trim() : ""}`
+                )}
+              >
+                Pay Rs.{amountTotal} via UPI app
+              </a>
+              <p className="hint" style={{ marginTop: 6, marginBottom: 0 }}>
+                Opens your UPI app directly on a phone (Google Pay, PhonePe,
+                Paytm, etc.). On a computer, use the QR code below instead.
+              </p>
+            </div>
+          )}
           <div className="bank-details">
             Account name: {BANK_DETAILS.accountName}
             <br />

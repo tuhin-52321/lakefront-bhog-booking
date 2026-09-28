@@ -112,6 +112,28 @@ export const BANK_DETAILS = {
   ifsc: "UTIB0004162",
 };
 
+// The society's real merchant UPI ID (VPA), decoded from the same UPI QR
+// code already used for collections (public/upi-qr.png) rather than typed
+// in separately — so it's guaranteed to match what the QR already pays into.
+export const UPI_ID = "037349041620055@AXISBANK";
+export const UPI_PAYEE_NAME = "Lakefront Socio Cultural Society";
+
+// Builds a `upi://pay` deep link that opens directly in the user's UPI app
+// (Google Pay, PhonePe, Paytm, etc.) with the amount and a note pre-filled,
+// as a one-tap alternative to scanning the QR code. Deep links like this
+// only open an installed UPI app on a phone — on desktop, tapping it does
+// nothing useful, so the QR code stays as the fallback for that case.
+export function buildUpiPayUrl(amount: number, note: string): string {
+  const params = new URLSearchParams({
+    pa: UPI_ID,
+    pn: UPI_PAYEE_NAME,
+    am: String(amount),
+    cu: "INR",
+    tn: note,
+  });
+  return `upi://pay?${params.toString()}`;
+}
+
 // Per-day plate count: 0 means "I do not want any plate this day".
 export type PlateSelection = Record<string, number>;
 

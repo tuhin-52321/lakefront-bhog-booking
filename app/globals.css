@@ -359,6 +359,17 @@ button.btn-secondary {
   color: var(--purple-dark);
 }
 
+.upi-pay-wrap {
+  text-align: center;
+  margin: 14px 0 4px;
+}
+
+.upi-pay-btn {
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+}
+
 .qr-wrap {
   text-align: center;
   padding: 8px 0 4px;
