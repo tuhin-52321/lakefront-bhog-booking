@@ -270,30 +270,9 @@ export default function Page() {
                   </div>
                 </div>
                 {d.key === FREE_BHOG_DAY.afterDayKey && (
-                  <div className="day-card free-day-card">
-                    <div className="day-head">
-                      <p className="day-title">
-                        <span className="free-badge">FREE</span>{" "}
-                        {FREE_BHOG_DAY.label}
-                      </p>
-                      <p className="day-price">
-                        Free for everyone — no booking or payment needed
-                      </p>
-                      <p className="day-menu">
-                        Menu: {FREE_BHOG_DAY.menu.join(", ")} ({MENU_NOTE})
-                      </p>
-                      <details className="menu-glossary">
-                        <summary>What&apos;s on the menu?</summary>
-                        <ul>
-                          {FREE_BHOG_DAY.menu.map((item) => (
-                            <li key={item}>
-                              <strong>{item}</strong>
-                              {DISH_GLOSSARY[item] ? ` — ${DISH_GLOSSARY[item]}` : ""}
-                            </li>
-                          ))}
-                        </ul>
-                      </details>
-                    </div>
+                  <div className="day-note">
+                    <p className="day-note-title">{FREE_BHOG_DAY.label}</p>
+                    <p className="day-note-text">{FREE_BHOG_DAY.note}</p>
                   </div>
                 )}
               </div>

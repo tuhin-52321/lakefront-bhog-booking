@@ -77,16 +77,16 @@ export const DAYS: DayDef[] = [
 // Menus are tentative and may change closer to the day.
 export const MENU_NOTE = "tentative — may change";
 
-// 19 Oct is a free Bhog day (no booking, no payment) — separate from the
-// paid, bookable DAYS above. It sits chronologically between "ashtami"
-// (18 Oct) and "nabami" (20 Oct) in DAYS, so the UI inserts it there rather
-// than always showing it first. Bandhakopir Tarkari was planned but has
-// been canceled, so it's left out of this list entirely.
-// Tithi-wise, 19 Oct falls at the Ashtami–Navami junction — Sandhi Puja.
+// 19 Oct (Sandhi Puja, the Ashtami–Navami junction) has no paid, bookable
+// Bhog slot — it sits between "ashtami" (18 Oct) and "nabami" (20 Oct) in
+// DAYS. The committee decided not to advertise a free-Bhog menu here (it's
+// limited-stock, first-come-first-served, and listing a menu could overpromise);
+// this is just a short placeholder so the date gap between 18 and 20 doesn't
+// read as a mistake. Puja-day activities for the 19th go out separately.
 export const FREE_BHOG_DAY = {
-  label: "Mon, 19 Oct — Sandhi Puja",
-  afterDayKey: "ashtami", // render this free-day card right after this DAYS entry
-  menu: ["Khichuri", "Labra", "Beguni", "Mango Chutney", "Papad", "Gulab Jamun"],
+  label: "Mon, 19 Oct",
+  note: "No paid Bhog on this day — look out for a separate communication about Puja Day activities.",
+  afterDayKey: "ashtami", // render this note right after this DAYS entry
 };
 
 // Short, plain-language descriptions for dishes that first-time readers may
