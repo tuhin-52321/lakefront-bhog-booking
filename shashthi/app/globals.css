@@ -1,0 +1,434 @@
+:root {
+  --purple: #5b3fd6;
+  --purple-dark: #46309e;
+  --bg: #f4f2fb;
+  --card: #ffffff;
+  --text: #1f2430;
+  --muted: #6b7280;
+  --border: #e4e1f2;
+  --green: #1e8e3e;
+  --red: #c5221f;
+  --radius: 14px;
+  --shadow: 0 1px 3px rgba(31, 36, 48, 0.08), 0 1px 2px rgba(31, 36, 48, 0.06);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 24px 16px 64px;
+}
+
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.card-header {
+  background: linear-gradient(135deg, var(--purple), var(--purple-dark));
+  color: #fff;
+  padding: 16px 20px;
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.card-body {
+  padding: 18px 20px;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+  line-height: 1.3;
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 4px;
+}
+
+p {
+  line-height: 1.55;
+}
+
+.pill {
+  display: inline-block;
+  background: #efeaff;
+  color: var(--purple-dark);
+  border-radius: 999px;
+  padding: 3px 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.92rem;
+  margin-bottom: 6px;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin: -2px 0 8px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
+select,
+textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 1rem;
+  background: #fff;
+  color: var(--text);
+  font-family: inherit;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid var(--purple);
+  outline-offset: 1px;
+  border-color: var(--purple);
+}
+
+.field {
+  margin-bottom: 16px;
+}
+
+.error-text {
+  color: var(--red);
+  font-size: 0.82rem;
+  margin-top: 6px;
+}
+
+.field.has-error input,
+.field.has-error select {
+  border-color: var(--red);
+}
+
+.day-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+
+.day-head {
+  background: #efeaff;
+  padding: 12px 16px;
+}
+
+.day-head .day-title {
+  font-weight: 700;
+  margin: 0 0 2px;
+}
+
+.day-head .day-price {
+  color: var(--purple-dark);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.day-head .day-menu {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: 6px;
+}
+
+.day-body {
+  padding: 14px 16px;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stepper button {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #fff;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--purple-dark);
+}
+
+.stepper button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.stepper .count {
+  min-width: 90px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.stepper .count.skip {
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 0.88rem;
+}
+
+.day-amount {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.total-bar {
+  position: sticky;
+  bottom: 0;
+  background: #fff;
+  border-top: 1px solid var(--border);
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+
+/* A page-wide running total, pinned to the bottom of the viewport so it
+   stays visible while scrolling through the single-page booking form. */
+.total-bar-fixed {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-width: 640px;
+  margin: 0 auto;
+  border-radius: var(--radius) var(--radius) 0 0;
+  box-shadow: 0 -2px 8px rgba(31, 36, 48, 0.1);
+  z-index: 20;
+}
+
+/* Leave room at the bottom of the page so content doesn't sit under the
+   fixed total bar. */
+.page-with-total-bar {
+  padding-bottom: 96px;
+}
+
+.policy-note {
+  background: #fff6e5;
+  border: 1px solid #f0dca3;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  margin-top: 14px;
+}
+
+.menu-glossary {
+  margin-top: 8px;
+  font-size: 0.85rem;
+}
+
+.menu-glossary summary {
+  cursor: pointer;
+  color: var(--purple-dark);
+  font-weight: 600;
+}
+
+.menu-glossary ul {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+}
+
+.menu-glossary li {
+  margin-bottom: 4px;
+}
+
+.total-bar .label {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.total-bar .amount {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--purple-dark);
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+button.btn {
+  appearance: none;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 22px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+button.btn-primary {
+  background: var(--purple);
+  color: #fff;
+}
+
+button.btn-primary:hover {
+  background: var(--purple-dark);
+}
+
+button.btn-primary:disabled {
+  background: #c9c1ee;
+  cursor: not-allowed;
+}
+
+button.btn-secondary {
+  background: transparent;
+  color: var(--purple-dark);
+  border: 1px solid var(--border);
+}
+
+.progress {
+  height: 6px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 4px 0 20px;
+}
+
+.progress > div {
+  height: 100%;
+  background: var(--purple);
+  transition: width 0.2s ease;
+}
+
+.summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.summary-table td {
+  padding: 6px 0;
+}
+
+.summary-table td:last-child {
+  text-align: right;
+  font-weight: 600;
+}
+
+.summary-table tr.total td {
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--purple-dark);
+}
+
+.free-badge {
+  display: inline-block;
+  background: var(--green);
+  color: #fff;
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.free-day-card {
+  border-color: var(--green);
+}
+
+.free-day-card .day-head {
+  background: #e8f5ea;
+}
+
+.upi-pay-wrap {
+  text-align: center;
+  margin: 14px 0 4px;
+}
+
+.upi-pay-btn {
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+}
+
+.qr-wrap {
+  text-align: center;
+  padding: 8px 0 4px;
+}
+
+.qr-wrap img {
+  width: 220px;
+  height: 220px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.bank-details {
+  background: #f8f7fd;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  margin-top: 10px;
+}
+
+.footer-note {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin-top: 24px;
+}
+
+.status-card {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.status-card .icon {
+  font-size: 2.6rem;
+  margin-bottom: 8px;
+}
+
+a {
+  color: var(--purple-dark);
+}
