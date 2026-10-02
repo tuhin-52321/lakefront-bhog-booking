@@ -137,9 +137,9 @@ export default function Page() {
           </h1>
           <p className="subtitle">Lakefront Socio Cultural Society</p>
           <p>
-            Namaskar! Bhog is served every puja day outside Party Hall 2 from
-            1:00 PM. All menus are pure vegetarian, with no onion and no
-            garlic.
+            Namaskar! Bhog is served on the below mentioned days outside
+            Party Hall 2 from 1:00 PM. All menus are pure vegetarian, with no
+            onion and no garlic.
           </p>
           <p>
             <strong>Price: Rs.{PRICE} per plate</strong> (per person, per day)
