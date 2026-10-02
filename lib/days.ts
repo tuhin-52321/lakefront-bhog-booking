@@ -1,7 +1,7 @@
-// Shared booking data: the 4 Bhog days, per-plate price, and menus.
+// Shared booking data: the 3 Bhog days, per-plate price, and menus.
 // Keep this in sync with the Apps Script project's dayDefs if either changes.
 
-export const PRICE = 350;
+export const PRICE = 275;
 
 export type DayDef = {
   key: string; // stable id used in form state + submitted payload
@@ -12,21 +12,6 @@ export type DayDef = {
 };
 
 export const DAYS: DayDef[] = [
-  {
-    key: "shashthi",
-    label: "Fri, 16 Oct — Maha Shashthi",
-    date: "16 Oct",
-    tithi: "Maha Shashthi",
-    menu: [
-      "Basanti Pulao",
-      "Jhuri Aloo Bhaja",
-      "Chanar Dalna",
-      "Potol Curry",
-      "Tomato Khejur Chutney",
-      "Papad",
-      "Rossogolla",
-    ],
-  },
   {
     key: "saptami",
     label: "Sat, 17 Oct — Maha Saptami",
