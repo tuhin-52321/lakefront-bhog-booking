@@ -48,6 +48,9 @@ export default function Page() {
 
   const plateTotal = useMemo(() => totalPlates(plates), [plates]);
   const amountTotal = useMemo(() => totalAmount(plates), [plates]);
+  const detailsReady = Boolean(
+    details.flat.trim() && details.name.trim() && details.email.trim()
+  );
 
   // "bhog-pay" is a fixed, greppable prefix so the committee can find these
   // payments in the bank's settlement/statement by searching one word,
@@ -55,6 +58,7 @@ export default function Page() {
   const upiNote = `bhog-pay${details.flat.trim() ? " Flat " + details.flat.trim() : ""}`;
 
   function setPlate(key: string, value: number) {
+    if (!detailsReady) return;
     const clamped = Math.max(0, Math.min(20, value));
     setPlates((p) => ({ ...p, [key]: clamped }));
   }
@@ -241,11 +245,17 @@ export default function Page() {
       <div className="card" ref={bookingRef}>
         <div className="card-header">Your booking</div>
         <div className="card-body">
-          <p className="hint" style={{ marginBottom: 16 }}>
-            Choose the number of plates (0–20) for each day. Days you leave
-            at &ldquo;Do not want this day&rdquo; won&apos;t be booked. Your
-            total updates live in the bar below as you pick.
-          </p>
+          {!detailsReady ? (
+            <p className="hint" style={{ marginBottom: 16, color: "#9b5c00", fontWeight: 600 }}>
+              Please fill your details before selecting plates.
+            </p>
+          ) : (
+            <p className="hint" style={{ marginBottom: 16 }}>
+              Choose the number of plates (0–20) for each day. Days you leave
+              at &ldquo;Do not want this day&rdquo; won&apos;t be booked. Your
+              total updates live in the bar below as you pick.
+            </p>
+          )}
           {DAYS.map((d) => {
             const count = plates[d.key] || 0;
             return (
@@ -272,7 +282,7 @@ export default function Page() {
                       <button
                         type="button"
                         onClick={() => setPlate(d.key, count - 1)}
-                        disabled={count <= 0}
+                        disabled={count <= 0 || !detailsReady}
                         aria-label={`Decrease plates for ${d.label}`}
                       >
                         −
@@ -285,7 +295,7 @@ export default function Page() {
                       <button
                         type="button"
                         onClick={() => setPlate(d.key, count + 1)}
-                        disabled={count >= 20}
+                        disabled={count >= 20 || !detailsReady}
                         aria-label={`Increase plates for ${d.label}`}
                       >
                         +
