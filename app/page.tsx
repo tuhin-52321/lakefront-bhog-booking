@@ -344,7 +344,7 @@ export default function Page() {
             button below on your phone, or scan the QR code from any upi app — or by bank
             transfer.
           </p>
-          {amountTotal > 0 && (
+          {amountTotal > 0 ? (
             <div className="upi-pay-wrap">
               <a
                 className="btn btn-primary upi-pay-btn"
@@ -357,6 +357,18 @@ export default function Page() {
                 Opens your UPI app directly on a phone (Google Pay, PhonePe,
                 Paytm, etc.). On a computer, use the QR code below instead.
               </p>
+            </div>
+          ) : (
+            <div className="upi-pay-wrap">
+              <button
+                className="btn btn-primary upi-pay-btn"
+                type="button"
+                disabled
+                aria-disabled="true"
+                style={{ opacity: 0.7, cursor: "not-allowed" }}
+              >
+                Select at least one plate to pay
+              </button>
             </div>
           )}
           <p style={{ marginTop: 12, marginBottom: 6 }}>
