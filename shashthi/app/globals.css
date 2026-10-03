@@ -291,7 +291,8 @@ textarea:focus {
   margin-top: 8px;
 }
 
-button.btn {
+button.btn,
+a.btn {
   appearance: none;
   border: none;
   border-radius: 10px;
@@ -300,23 +301,32 @@ button.btn {
   font-weight: 600;
   cursor: pointer;
   font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  line-height: 1.2;
 }
 
-button.btn-primary {
+button.btn-primary,
+a.btn-primary {
   background: var(--purple);
   color: #fff;
 }
 
-button.btn-primary:hover {
+button.btn-primary:hover,
+a.btn-primary:hover {
   background: var(--purple-dark);
 }
 
-button.btn-primary:disabled {
+button.btn-primary:disabled,
+a.btn-primary:disabled {
   background: #c9c1ee;
   cursor: not-allowed;
 }
 
-button.btn-secondary {
+button.btn-secondary,
+a.btn-secondary {
   background: transparent;
   color: var(--purple-dark);
   border: 1px solid var(--border);

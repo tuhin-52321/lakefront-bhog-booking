@@ -171,7 +171,7 @@ export default function Page() {
             onion and no garlic.
           </p>
           <p>
-            <strong>Price: Rs.{PRICE} per plate</strong> (per person, per day)
+            <strong>Price: ₹{PRICE} per plate</strong> (per person, per day)
           </p>
           <div className="policy-note">
             <strong>Please note:</strong> coupons are date-specific and{" "}
@@ -253,7 +253,7 @@ export default function Page() {
                 <div className="day-card">
                   <div className="day-head">
                     <p className="day-title">{d.label}</p>
-                    <p className="day-price">Price: Rs.{PRICE} per plate</p>
+                    <p className="day-price">Price: ₹{PRICE} per plate</p>
                     <p className="day-menu">Menu: {d.menu.join(", ")} ({MENU_NOTE})</p>
                     <details className="menu-glossary">
                       <summary>What&apos;s on the menu?</summary>
@@ -293,7 +293,7 @@ export default function Page() {
                     </div>
                     {count > 0 && (
                       <div className="day-amount">
-                        {count} × Rs.{PRICE} = Rs.{count * PRICE}
+                        {count} × ₹{PRICE} = ₹{count * PRICE}
                       </div>
                     )}
                   </div>
@@ -328,21 +328,21 @@ export default function Page() {
                     <td>
                       {d.date} — {count} plate{count > 1 ? "s" : ""}
                     </td>
-                    <td>Rs.{count * PRICE}</td>
+                    <td>₹{count * PRICE}</td>
                   </tr>
                 );
               })}
               <tr className="total">
                 <td>Total ({plateTotal} plates)</td>
-                <td>Rs.{amountTotal}</td>
+                <td>₹{amountTotal}</td>
               </tr>
             </tbody>
           </table>
 
           <p style={{ marginTop: 18, marginBottom: 6 }}>
-            Pay <strong>Rs.{amountTotal}</strong> by any UPI app — tap the
-            button below on your phone, or scan the QR code — or by bank
-            transfer:
+            Pay <strong>₹{amountTotal}</strong> by any UPI app — tap the
+            button below on your phone, or scan the QR code from any upi app — or by bank
+            transfer.
           </p>
           {amountTotal > 0 && (
             <div className="upi-pay-wrap">
@@ -351,7 +351,7 @@ export default function Page() {
                 href={buildUpiPayUrl(amountTotal, upiNote)}
                 onClick={logLead}
               >
-                Pay Rs.{amountTotal} via UPI app
+                Pay ₹{amountTotal} via UPI app
               </a>
               <p className="hint" style={{ marginTop: 6, marginBottom: 0 }}>
                 Opens your UPI app directly on a phone (Google Pay, PhonePe,
@@ -359,6 +359,12 @@ export default function Page() {
               </p>
             </div>
           )}
+          <p style={{ marginTop: 12, marginBottom: 6 }}>
+            After your payment is done, note the UTR / UPI transaction reference and enter it below to complete your booking.
+            <span style={{ color: "#9b5c00", fontWeight: 700, display: "inline-block", marginTop: 4 }}>
+              Please submit the form after payment; otherwise your booking will not be recorded.
+            </span>
+          </p>
           <div className="bank-details">
             Account name: {BANK_DETAILS.accountName}
             <br />
@@ -427,7 +433,7 @@ export default function Page() {
           <div className="label">
             {plateTotal} plate{plateTotal !== 1 ? "s" : ""} selected
           </div>
-          <div className="amount">Rs.{amountTotal}</div>
+          <div className="amount">₹{amountTotal}</div>
         </div>
       </div>
     </div>
