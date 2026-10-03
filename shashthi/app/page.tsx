@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import {
   DAYS,
   PRICE,
@@ -54,37 +54,6 @@ export default function Page() {
   // "-shashthi" suffix lets this app's payments still be told apart from
   // the main app's if needed, without breaking the shared "bhog-pay" search.
   const upiNote = `bhog-pay-shashthi${details.flat.trim() ? " Flat " + details.flat.trim() : ""}`;
-
-  const [qrDataUrl, setQrDataUrl] = useState("");
-
-  // Once an amount is selected, render a QR encoding the same upi://pay
-  // link as the "Pay via UPI app" button (amount + bhog-pay note
-  // pre-filled) — so scanning it carries the note too, not just tapping
-  // the button. Falls back to the static collection QR (no amount/note)
-  // until a plate is picked, for desktop users scanning before choosing.
-  useEffect(() => {
-    if (amountTotal <= 0) {
-      setQrDataUrl("");
-      return;
-    }
-    let cancelled = false;
-    import("qrcode")
-      .then((QRCode) =>
-        QRCode.toDataURL(buildUpiPayUrl(amountTotal, upiNote), {
-          margin: 1,
-          width: 440,
-        })
-      )
-      .then((url) => {
-        if (!cancelled) setQrDataUrl(url);
-      })
-      .catch(() => {
-        if (!cancelled) setQrDataUrl("");
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [amountTotal, upiNote]);
 
   function setPlate(key: string, value: number) {
     const clamped = Math.max(0, Math.min(20, value));
@@ -386,26 +355,8 @@ export default function Page() {
             IFSC: {BANK_DETAILS.ifsc}
           </div>
           <div className="qr-wrap">
-            {amountTotal > 0 ? (
-              qrDataUrl ? (
-                <img
-                  src={qrDataUrl}
-                  alt="Scan to pay via UPI — amount and 'bhog-pay' note pre-filled"
-                />
-              ) : (
-                <p className="hint">Generating your payment QR…</p>
-              )
-            ) : (
-              <img src="/upi-qr.png" alt="Scan to pay with any UPI app" />
-            )}
+            <img src="/upi-qr.png" alt="Scan to pay with any UPI app" />
           </div>
-          {amountTotal > 0 && (
-            <p className="hint" style={{ textAlign: "center", marginTop: 6 }}>
-              This QR has your amount and a &ldquo;bhog-pay&rdquo; note
-              pre-filled, so it&apos;s easier to find in your bank
-              statement — most UPI apps let you edit it before paying.
-            </p>
-          )}
 
           <div
             className={`field ${errors.utr ? "has-error" : ""}`}
