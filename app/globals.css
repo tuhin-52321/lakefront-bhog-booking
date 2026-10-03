@@ -394,11 +394,18 @@ button.btn-secondary {
   padding: 8px 0 4px;
 }
 
-.qr-wrap img {
-  width: 220px;
-  height: 220px;
+.qr-wrap .qr-frame {
+  display: inline-block;
+  padding: 10px;
+  background: #fff;
   border: 1px solid var(--border);
   border-radius: 12px;
+}
+
+.qr-wrap img {
+  display: block;
+  width: 220px;
+  height: 220px;
 }
 
 .bank-details {

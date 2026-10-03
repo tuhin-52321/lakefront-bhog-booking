@@ -369,9 +369,10 @@ export default function Page() {
             IFSC: {BANK_DETAILS.ifsc}
           </div>
           <div className="qr-wrap">
-            <img src="/upi-qr.png" alt="Scan to pay with any UPI app" />
+            <div className="qr-frame">
+                <img src="/upi-qr.png" alt="Scan to pay with any UPI app" />
+            </div>
           </div>
-
           <div
             className={`field ${errors.utr ? "has-error" : ""}`}
             style={{ marginTop: 18 }}
