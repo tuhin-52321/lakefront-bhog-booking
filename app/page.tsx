@@ -517,7 +517,13 @@ export default function Page() {
                       <strong>How to pay on this phone:</strong>
                       <ol>
                         <li>Tap your app below (copies the UPI ID and opens the app).</li>
-                        <li>In your app, select <strong>&quot;Pay UPI ID / anyone&quot;</strong> and paste the ID.</li>
+                        <li>
+                          In your app, paste the copied UPI ID:
+                          <div style={{ marginTop: 4, color: "#444", fontSize: "0.8rem", lineHeight: 1.4 }}>
+                            • <strong>PhonePe:</strong> Tap <strong>&quot;To Mobile Number&quot;</strong> (or &quot;To UPI ID&quot;) ➔ paste the UPI ID into the search / mobile number box.<br />
+                            • <strong>Google Pay / Paytm:</strong> Tap <strong>&quot;Pay UPI ID / anyone&quot;</strong> ➔ paste the UPI ID.
+                          </div>
+                        </li>
                         <li>Pay <strong>₹{amountTotal}</strong>, note the UTR / reference number, and enter it below.</li>
                       </ol>
                     </div>
@@ -538,6 +544,9 @@ export default function Page() {
                           <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98Z" />
                         </svg>
                         <span>Google Pay</span>
+                        <span style={{ fontSize: "0.68rem", color: "var(--muted)", fontWeight: 500, lineHeight: 1.1, marginTop: 2 }}>
+                          Pay UPI ID
+                        </span>
                       </a>
 
                       <a
@@ -550,6 +559,9 @@ export default function Page() {
                           <path d="M16.5 7.5h-5.2c-.3 0-.5.2-.5.5v1.2c0 .3.2.5.5.5h1.2v2.1c-.8 0-1.6.4-2.1 1-.5.7-.6 1.6-.3 2.4.3.8 1.1 1.4 2 1.5.2 0 .4 0 .6-.1v2.4c0 .3.2.5.5.5h1.2c.3 0 .5-.2.5-.5v-4.8h1.6c.3 0 .5-.2.5-.5V12c0-.3-.2-.5-.5-.5h-1.6V9.7h1.6c.3 0 .5-.2.5-.5V8c0-.3-.2-.5-.5-.5Zm-4 6.7c-.5 0-.9-.4-.9-.9s.4-.9.9-.9.9.4.9.9-.4.9-.9.9Z" fill="#fff" />
                         </svg>
                         <span>PhonePe</span>
+                        <span style={{ fontSize: "0.68rem", color: "#5f259f", fontWeight: 600, lineHeight: 1.1, marginTop: 2 }}>
+                          Pay to Mobile No.
+                        </span>
                       </a>
 
                       <a
@@ -562,6 +574,9 @@ export default function Page() {
                           <text x="12" y="15.5" fill="#00b9f5" fontSize="8.5" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">paytm</text>
                         </svg>
                         <span>Paytm</span>
+                        <span style={{ fontSize: "0.68rem", color: "var(--muted)", fontWeight: 500, lineHeight: 1.1, marginTop: 2 }}>
+                          To UPI Apps
+                        </span>
                       </a>
                     </div>
                   </>
