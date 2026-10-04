@@ -554,6 +554,28 @@ a.btn-secondary {
   height: 220px;
 }
 
+.qr-download-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #f0ecf9;
+  color: var(--purple-dark);
+  border: 1px solid #d4c5ea;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.qr-download-btn:hover {
+  background: #e4dcf4;
+  border-color: var(--purple);
+}
+
 .bank-details {
   background: #f8f7fd;
   border-radius: 10px;

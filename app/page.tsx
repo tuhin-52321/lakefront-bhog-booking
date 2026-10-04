@@ -401,10 +401,7 @@ export default function Page() {
           </table>
 
           <p style={{ marginTop: 18, marginBottom: 6 }}>
-            Pay <strong>₹{amountTotal}</strong>{" "}
-            {isPhone
-              ? "using your UPI app below, scan/upload the QR code, or pay by bank transfer:"
-              : "by scanning the QR code with any UPI app, or by bank transfer:"}
+            Pay <strong>₹{amountTotal}</strong> using one of the payment options below:
           </p>
 
           <div
@@ -426,100 +423,159 @@ export default function Page() {
               After your payment is done, note the UTR / UPI transaction reference and enter it below to complete your booking. Otherwise your booking will not be recorded.
             </span>
           </div>
-          {isPhone && (
-            amountTotal > 0 ? (
-              <div className="upi-pay-wrap">
-                {/* UPI ID card with Copy Button */}
-                <div className="upi-id-card">
-                  <div>
-                    <div style={{ fontSize: "0.72rem", color: "#666", textTransform: "uppercase", fontWeight: 700, letterSpacing: 0.5 }}>
-                      UPI ID (Payee: {BANK_DETAILS.accountName})
-                    </div>
-                    <div className="upi-id-text">{UPI_ID}</div>
-                  </div>
-                  <button
-                    type="button"
-                    className={`upi-copy-action-btn ${copied["upi-id-main"] ? "copied" : ""}`}
-                    onClick={() => copyText(UPI_ID, "upi-id-main")}
-                  >
-                    {copied["upi-id-main"] ? "✓ Copied!" : "Copy UPI ID"}
-                  </button>
-                </div>
-
-                <div className="upi-step-guide">
-                  <strong>How to pay on phone:</strong>
-                  <ol>
-                    <li>Tap your app below (copies the UPI ID and opens the app).</li>
-                    <li>In your app, select <strong>&quot;Pay UPI ID / anyone&quot;</strong> and paste the ID.</li>
-                    <li>Pay <strong>₹{amountTotal}</strong>, note the UTR / reference number, and enter it below.</li>
-                  </ol>
-                </div>
-
-                <div style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--purple-dark)", textAlign: "left", marginBottom: 6 }}>
-                  Tap to copy ID &amp; open app:
-                </div>
-                <div className="upi-apps-grid">
-                  <button
-                    type="button"
-                    className="upi-app-btn"
-                    onClick={() => copyAndOpenApp("gpay")}
-                  >
-                    <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
-                      <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17Z" />
-                      <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24Z" />
-                      <path fill="#FBBC05" d="M5.28 14.27a7.18 7.18 0 0 1 0-4.54V6.58H1.25a11.98 11.98 0 0 0 0 10.84l4.03-3.15Z" />
-                      <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98Z" />
-                    </svg>
-                    <span>Google Pay</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    className="upi-app-btn"
-                    onClick={() => copyAndOpenApp("phonepe")}
-                  >
-                    <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
-                      <rect width="24" height="24" rx="6" fill="#5f259f" />
-                      <path d="M16.5 7.5h-5.2c-.3 0-.5.2-.5.5v1.2c0 .3.2.5.5.5h1.2v2.1c-.8 0-1.6.4-2.1 1-.5.7-.6 1.6-.3 2.4.3.8 1.1 1.4 2 1.5.2 0 .4 0 .6-.1v2.4c0 .3.2.5.5.5h1.2c.3 0 .5-.2.5-.5v-4.8h1.6c.3 0 .5-.2.5-.5V12c0-.3-.2-.5-.5-.5h-1.6V9.7h1.6c.3 0 .5-.2.5-.5V8c0-.3-.2-.5-.5-.5Zm-4 6.7c-.5 0-.9-.4-.9-.9s.4-.9.9-.9.9.4.9.9-.4.9-.9.9Z" fill="#fff" />
-                    </svg>
-                    <span>PhonePe</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    className="upi-app-btn"
-                    onClick={() => copyAndOpenApp("paytm")}
-                  >
-                    <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
-                      <rect width="24" height="24" rx="6" fill="#002e6e" />
-                      <text x="12" y="15.5" fill="#00b9f5" fontSize="8.5" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">paytm</text>
-                    </svg>
-                    <span>Paytm</span>
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="upi-pay-wrap">
-                <button
-                  className="btn btn-primary upi-pay-btn"
-                  type="button"
-                  disabled
-                  aria-disabled="true"
-                  style={{ opacity: 0.7, cursor: "not-allowed", width: "100%" }}
-                >
-                  Select at least one plate to pay
-                </button>
-              </div>
-            )
-          )}
-          <div className="qr-wrap" style={{ marginTop: isPhone ? 16 : 8, marginBottom: 12 }}>
-            <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--muted)", marginBottom: 6 }}>
-              {isPhone ? "Or scan / screenshot QR code to pay:" : "Scan QR code to pay with any UPI app:"}
+          {/* Option 1: Scan QR Code (Top Option) */}
+          <div className="qr-wrap" style={{ marginTop: 14, marginBottom: 16 }}>
+            <div style={{ fontSize: "0.92rem", fontWeight: 700, color: "var(--purple-dark)", marginBottom: 6 }}>
+              Option 1: Scan QR Code to Pay
             </div>
             <div className="qr-frame">
               <img src="/upi-qr.png" alt="Scan to pay with any UPI app" />
             </div>
+
+            {/* If amount <= 2000: Offer Save to Gallery */}
+            {amountTotal > 0 && amountTotal <= 2000 && (
+              <div style={{ marginTop: 10 }}>
+                <a
+                  href="/upi-qr.png"
+                  download="Lakefront-Bhog-UPI-QR.png"
+                  className="qr-download-btn"
+                >
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" y1="15" x2="12" y2="3" />
+                  </svg>
+                  <span>Save QR to Gallery / Photos</span>
+                </a>
+                <div style={{ fontSize: "0.78rem", color: "#666", marginTop: 6, maxWidth: 300, marginInline: "auto", lineHeight: 1.4 }}>
+                  💡 In Google Pay, PhonePe, or Paytm: tap <strong>Scan QR</strong> ➔ tap the <strong>Gallery/Photo icon</strong> ➔ select this QR.
+                </div>
+              </div>
+            )}
+
+            {/* If amount > 2000: Note about UPI gallery restriction */}
+            {amountTotal > 2000 && (
+              <div
+                style={{
+                  fontSize: "0.8rem",
+                  color: "#8a5800",
+                  background: "#fff9ec",
+                  border: "1px solid #f6d899",
+                  borderRadius: 8,
+                  padding: "8px 12px",
+                  marginTop: 10,
+                  maxWidth: 340,
+                  marginInline: "auto",
+                  textAlign: "left",
+                  lineHeight: 1.45,
+                }}
+              >
+                ℹ️ <strong>Amount is above ₹2,000:</strong> UPI apps restrict scanning saved gallery photos above ₹2,000. Please scan this code directly using another phone, or use Option 2 below.
+              </div>
+            )}
           </div>
+
+          {/* Option 2: Pay via UPI ID */}
+          <div style={{ borderTop: "1px dashed var(--border)", paddingTop: 14, marginTop: 14 }}>
+            <div style={{ fontSize: "0.92rem", fontWeight: 700, color: "var(--purple-dark)", marginBottom: 8 }}>
+              Option 2: Pay via UPI ID {isPhone ? "(On this phone)" : ""}
+            </div>
+
+            <div className="upi-pay-wrap">
+              {/* UPI ID card with Copy Button */}
+              <div className="upi-id-card">
+                <div>
+                  <div style={{ fontSize: "0.72rem", color: "#666", textTransform: "uppercase", fontWeight: 700, letterSpacing: 0.5 }}>
+                    UPI ID (Payee: {BANK_DETAILS.accountName})
+                  </div>
+                  <div className="upi-id-text">{UPI_ID}</div>
+                </div>
+                <button
+                  type="button"
+                  className={`upi-copy-action-btn ${copied["upi-id-main"] ? "copied" : ""}`}
+                  onClick={() => copyText(UPI_ID, "upi-id-main")}
+                >
+                  {copied["upi-id-main"] ? "✓ Copied!" : "Copy UPI ID"}
+                </button>
+              </div>
+
+              {isPhone && (
+                amountTotal > 0 ? (
+                  <>
+                    <div className="upi-step-guide">
+                      <strong>How to pay on this phone:</strong>
+                      <ol>
+                        <li>Tap your app below (copies the UPI ID and opens the app).</li>
+                        <li>In your app, select <strong>&quot;Pay UPI ID / anyone&quot;</strong> and paste the ID.</li>
+                        <li>Pay <strong>₹{amountTotal}</strong>, note the UTR / reference number, and enter it below.</li>
+                      </ol>
+                    </div>
+
+                    <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--purple-dark)", textAlign: "left", marginBottom: 6 }}>
+                      Tap to copy ID &amp; open app:
+                    </div>
+                    <div className="upi-apps-grid">
+                      <button
+                        type="button"
+                        className="upi-app-btn"
+                        onClick={() => copyAndOpenApp("gpay")}
+                      >
+                        <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+                          <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17Z" />
+                          <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24Z" />
+                          <path fill="#FBBC05" d="M5.28 14.27a7.18 7.18 0 0 1 0-4.54V6.58H1.25a11.98 11.98 0 0 0 0 10.84l4.03-3.15Z" />
+                          <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98Z" />
+                        </svg>
+                        <span>Google Pay</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        className="upi-app-btn"
+                        onClick={() => copyAndOpenApp("phonepe")}
+                      >
+                        <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+                          <rect width="24" height="24" rx="6" fill="#5f259f" />
+                          <path d="M16.5 7.5h-5.2c-.3 0-.5.2-.5.5v1.2c0 .3.2.5.5.5h1.2v2.1c-.8 0-1.6.4-2.1 1-.5.7-.6 1.6-.3 2.4.3.8 1.1 1.4 2 1.5.2 0 .4 0 .6-.1v2.4c0 .3.2.5.5.5h1.2c.3 0 .5-.2.5-.5v-4.8h1.6c.3 0 .5-.2.5-.5V12c0-.3-.2-.5-.5-.5h-1.6V9.7h1.6c.3 0 .5-.2.5-.5V8c0-.3-.2-.5-.5-.5Zm-4 6.7c-.5 0-.9-.4-.9-.9s.4-.9.9-.9.9.4.9.9-.4.9-.9.9Z" fill="#fff" />
+                        </svg>
+                        <span>PhonePe</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        className="upi-app-btn"
+                        onClick={() => copyAndOpenApp("paytm")}
+                      >
+                        <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+                          <rect width="24" height="24" rx="6" fill="#002e6e" />
+                          <text x="12" y="15.5" fill="#00b9f5" fontSize="8.5" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">paytm</text>
+                        </svg>
+                        <span>Paytm</span>
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <div style={{ marginTop: 10 }}>
+                    <button
+                      className="btn btn-primary upi-pay-btn"
+                      type="button"
+                      disabled
+                      aria-disabled="true"
+                      style={{ opacity: 0.7, cursor: "not-allowed", width: "100%" }}
+                    >
+                      Select at least one plate to pay
+                    </button>
+                  </div>
+                )
+              )}
+            </div>
+          </div>
+
+          {/* Option 3: Bank Transfer */}
+          <div style={{ borderTop: "1px dashed var(--border)", paddingTop: 14, marginTop: 14 }}>
+            <div style={{ fontSize: "0.92rem", fontWeight: 700, color: "var(--purple-dark)", marginBottom: 6 }}>
+              Option 3: Bank Transfer (NEFT / IMPS)
+            </div>
           <div className="bank-details" style={{ marginTop: 10 }}>
             <div style={{ display: "inline-flex", alignItems: "center", gap: 8, flexWrap: "nowrap" }}>
               <span>Account name: {BANK_DETAILS.accountName}</span>
@@ -684,6 +740,7 @@ export default function Page() {
               <div style={{ marginTop: 8, fontSize: "0.78rem", fontStyle: "italic", color: "var(--muted)" }}>
                 Tap the copy icon to copy the values.
               </div>
+            </div>
           </div>
           <div
             className={`field ${errors.utr ? "has-error" : ""}`}
