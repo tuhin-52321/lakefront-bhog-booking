@@ -118,14 +118,31 @@ export const BANK_DETAILS = {
 // The society's real merchant UPI ID (VPA), decoded from the same UPI QR
 // code already used for collections (public/upi-qr.png) rather than typed
 // in separately — so it's guaranteed to match what the QR already pays into.
-export const UPI_ID = "mab.037349041620055@axisbank";
+export const UPI_ID = "MAB.037349041620055@AXISBANK";
 export const UPI_PAYEE_NAME = "Lakefront Socio Cultural Society";
 
+// Direct app launchers that open the installed payment app directly
+// so the user can easily paste the copied UPI ID.
+export function buildAppLaunchUrl(
+  app: "gpay" | "phonepe" | "paytm",
+  isAndroid: boolean
+): string {
+  if (isAndroid) {
+    const packages: Record<string, string> = {
+      gpay: "com.google.android.apps.nbu.paisa.user",
+      phonepe: "com.phonepe.app",
+      paytm: "net.one97.paytm",
+    };
+    return `intent://#Intent;package=${packages[app]};end`;
+  }
+  if (app === "phonepe") return "phonepe://";
+  if (app === "paytm") return "paytmmp://";
+  if (app === "gpay") return "gpay://";
+  return "#";
+}
+
 // Builds a `upi://pay` deep link that opens directly in the user's UPI app
-// (Google Pay, PhonePe, Paytm, etc.) with the amount and a note pre-filled,
-// as a one-tap alternative to scanning the QR code. Deep links like this
-// only open an installed UPI app on a phone — on desktop, tapping it does
-// nothing useful, so the QR code stays as the fallback for that case.
+// (Google Pay, PhonePe, Paytm, etc.) with the amount and a note pre-filled.
 export function buildUpiPayUrl(amount: number, note: string): string {
   const params = new URLSearchParams({
     pa: UPI_ID,
@@ -135,51 +152,6 @@ export function buildUpiPayUrl(amount: number, note: string): string {
     tn: note,
   });
   return `upi://pay?${params.toString().replace(/\+/g, "%20")}`;
-}
-
-export function buildAppUpiUrl(
-  app: "generic" | "gpay" | "phonepe" | "paytm",
-  amount: number,
-  note: string,
-  isAndroid: boolean
-): string {
-  const params = new URLSearchParams({
-    pa: UPI_ID,
-    pn: UPI_PAYEE_NAME,
-    am: String(amount),
-    cu: "INR",
-    tn: note,
-  });
-  const queryString = params.toString().replace(/\+/g, "%20");
-
-  if (app === "generic") {
-    return `upi://pay?${queryString}`;
-  }
-
-  if (isAndroid) {
-    const packages: Record<string, string> = {
-      gpay: "com.google.android.apps.nbu.paisa.user",
-      phonepe: "com.phonepe.app",
-      paytm: "net.one97.paytm",
-    };
-    const pkg = packages[app];
-    if (pkg) {
-      return `intent://pay?${queryString}#Intent;scheme=upi;package=${pkg};end`;
-    }
-  } else {
-    // iOS specific URL schemes
-    if (app === "phonepe") {
-      return `phonepe://pay?${queryString}`;
-    }
-    if (app === "paytm") {
-      return `paytmmp://pay?${queryString}`;
-    }
-    if (app === "gpay") {
-      return `gpay://upi/pay?${queryString}`;
-    }
-  }
-
-  return `upi://pay?${queryString}`;
 }
 
 // Per-day plate count: 0 means "I do not want any plate this day".

@@ -462,6 +462,73 @@ a.btn-secondary {
   background: #ece6f8;
 }
 
+.upi-id-card {
+  background: #f8f6fc;
+  border: 1px solid #e2dbf5;
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin: 12px 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.upi-id-text {
+  font-family: monospace;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--purple-dark);
+  word-break: break-all;
+}
+
+.upi-copy-action-btn {
+  appearance: none;
+  border: 1px solid var(--purple);
+  background: var(--purple);
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.upi-copy-action-btn:hover {
+  background: var(--purple-dark);
+}
+
+.upi-copy-action-btn.copied {
+  background: #2e7d32;
+  border-color: #2e7d32;
+}
+
+.upi-step-guide {
+  background: #fafafc;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin: 10px 0 12px;
+  font-size: 0.82rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+.upi-step-guide ol {
+  margin: 4px 0 0;
+  padding-left: 18px;
+}
+
+.upi-step-guide li {
+  margin-bottom: 4px;
+}
+
 .upi-pay-btn {
   display: inline-block;
   text-decoration: none;
