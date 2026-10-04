@@ -12,6 +12,7 @@ import {
   totalPlates,
   totalAmount,
   buildUpiPayUrl,
+  buildAppUpiUrl,
   UPI_ID,
 } from "@/lib/days";
 
@@ -44,6 +45,7 @@ export default function Page() {
   const [submitError, setSubmitError] = useState("");
   const [copied, setCopied] = useState<{ [key: string]: boolean }>({});
   const [isPhone, setIsPhone] = useState(false);
+  const [isAndroid, setIsAndroid] = useState(false);
 
   useEffect(() => {
     const ua = typeof navigator !== "undefined" ? navigator.userAgent || "" : "";
@@ -51,6 +53,7 @@ export default function Page() {
       /Android|iPhone|iPod|BlackBerry|IEMobile|Opera Mini|webOS/i.test(ua) ||
       Boolean((navigator as any)?.userAgentData?.mobile);
     setIsPhone(isMobilePhone);
+    setIsAndroid(/Android/i.test(ua));
   }, []);
 
   const detailsRef = useRef<HTMLDivElement>(null);
@@ -74,10 +77,10 @@ export default function Page() {
     setPlates((p) => ({ ...p, [key]: clamped }));
   }
 
-  // Fire-and-forget: logs a "lead" row when someone taps the UPI pay link,
+  // Fire-and-forget: logs a "lead" row when someone taps a UPI pay link,
   // in case they never come back to submit the form. Never blocks or
   // cancels the upi:// handoff — a failure here is silently ignored.
-  function logLead() {
+  function logLead(paymentApp: string = "Other UPI") {
     try {
       fetch("/api/lead", {
         method: "POST",
@@ -91,6 +94,7 @@ export default function Page() {
           plates,
           totalPlates: plateTotal,
           totalAmount: amountTotal,
+          paymentApp,
         }),
       }).catch(() => {});
     } catch {
@@ -397,16 +401,60 @@ export default function Page() {
           {isPhone && (
             amountTotal > 0 ? (
               <div className="upi-pay-wrap">
+                <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--muted)", textAlign: "left", marginBottom: 6 }}>
+                  Tap your preferred UPI app to pay:
+                </div>
+                <div className="upi-apps-grid">
+                  <a
+                    className="upi-app-btn"
+                    href={buildAppUpiUrl("gpay", amountTotal, upiNote, isAndroid)}
+                    onClick={() => logLead("GPay")}
+                  >
+                    <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+                      <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17Z" />
+                      <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24Z" />
+                      <path fill="#FBBC05" d="M5.28 14.27a7.18 7.18 0 0 1 0-4.54V6.58H1.25a11.98 11.98 0 0 0 0 10.84l4.03-3.15Z" />
+                      <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98Z" />
+                    </svg>
+                    <span>Google Pay</span>
+                  </a>
+
+                  <a
+                    className="upi-app-btn"
+                    href={buildAppUpiUrl("phonepe", amountTotal, upiNote, isAndroid)}
+                    onClick={() => logLead("PhonePe")}
+                  >
+                    <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+                      <rect width="24" height="24" rx="6" fill="#5f259f" />
+                      <path d="M16.5 7.5h-5.2c-.3 0-.5.2-.5.5v1.2c0 .3.2.5.5.5h1.2v2.1c-.8 0-1.6.4-2.1 1-.5.7-.6 1.6-.3 2.4.3.8 1.1 1.4 2 1.5.2 0 .4 0 .6-.1v2.4c0 .3.2.5.5.5h1.2c.3 0 .5-.2.5-.5v-4.8h1.6c.3 0 .5-.2.5-.5V12c0-.3-.2-.5-.5-.5h-1.6V9.7h1.6c.3 0 .5-.2.5-.5V8c0-.3-.2-.5-.5-.5Zm-4 6.7c-.5 0-.9-.4-.9-.9s.4-.9.9-.9.9.4.9.9-.4.9-.9.9Z" fill="#fff" />
+                    </svg>
+                    <span>PhonePe</span>
+                  </a>
+
+                  <a
+                    className="upi-app-btn"
+                    href={buildAppUpiUrl("paytm", amountTotal, upiNote, isAndroid)}
+                    onClick={() => logLead("Paytm")}
+                  >
+                    <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+                      <rect width="24" height="24" rx="6" fill="#002e6e" />
+                      <text x="12" y="15.5" fill="#00b9f5" fontSize="8.5" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">paytm</text>
+                    </svg>
+                    <span>Paytm</span>
+                  </a>
+                </div>
+
                 <a
-                  className="btn btn-primary upi-pay-btn"
+                  className="upi-generic-btn"
                   href={buildUpiPayUrl(amountTotal, upiNote)}
-                  onClick={logLead}
+                  onClick={() => logLead("Other UPI")}
                 >
-                  Pay ₹{amountTotal} via UPI app
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                    <line x1="2" y1="10" x2="22" y2="10" />
+                  </svg>
+                  <span>Other UPI Apps (Cred, BHIM, etc.)</span>
                 </a>
-                <p className="hint" style={{ marginTop: 6, marginBottom: 0 }}>
-                  Opens your UPI app directly (Google Pay, PhonePe, Paytm, etc.).
-                </p>
               </div>
             ) : (
               <div className="upi-pay-wrap">
@@ -415,7 +463,7 @@ export default function Page() {
                   type="button"
                   disabled
                   aria-disabled="true"
-                  style={{ opacity: 0.7, cursor: "not-allowed" }}
+                  style={{ opacity: 0.7, cursor: "not-allowed", width: "100%" }}
                 >
                   Select at least one plate to pay
                 </button>

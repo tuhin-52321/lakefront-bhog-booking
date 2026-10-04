@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: "Invalid request body." }, { status: 400 });
   }
 
-  const { flat, name, email, phone, plates, totalPlates, totalAmount } = body || {};
+  const { flat, name, email, phone, plates, totalPlates, totalAmount, paymentApp } = body || {};
 
   const perDay: Record<string, number> = {};
   if (plates && typeof plates === "object") {
@@ -36,10 +36,13 @@ export async function POST(req: NextRequest) {
     }
   }
 
+  const appName =
+    typeof paymentApp === "string" && paymentApp.trim() ? paymentApp.trim() : "main";
+
   const payload = {
     secret,
     action: "lead",
-    app: "main",
+    app: appName,
     flat: typeof flat === "string" ? flat.trim() : "",
     name: typeof name === "string" ? name.trim() : "",
     email: typeof email === "string" ? email.trim() : "",
@@ -47,7 +50,7 @@ export async function POST(req: NextRequest) {
     plates: perDay,
     totalPlates: Number.isFinite(Number(totalPlates)) ? Number(totalPlates) : 0,
     totalAmount: Number.isFinite(Number(totalAmount)) ? Number(totalAmount) : 0,
-    note: "Clicked Pay via UPI",
+    note: `Clicked Pay via ${appName === "main" ? "UPI" : appName}`,
   };
 
   try {

@@ -137,6 +137,51 @@ export function buildUpiPayUrl(amount: number, note: string): string {
   return `upi://pay?${params.toString().replace(/\+/g, "%20")}`;
 }
 
+export function buildAppUpiUrl(
+  app: "generic" | "gpay" | "phonepe" | "paytm",
+  amount: number,
+  note: string,
+  isAndroid: boolean
+): string {
+  const params = new URLSearchParams({
+    pa: UPI_ID,
+    pn: UPI_PAYEE_NAME,
+    am: String(amount),
+    cu: "INR",
+    tn: note,
+  });
+  const queryString = params.toString().replace(/\+/g, "%20");
+
+  if (app === "generic") {
+    return `upi://pay?${queryString}`;
+  }
+
+  if (isAndroid) {
+    const packages: Record<string, string> = {
+      gpay: "com.google.android.apps.nbu.paisa.user",
+      phonepe: "com.phonepe.app",
+      paytm: "net.one97.paytm",
+    };
+    const pkg = packages[app];
+    if (pkg) {
+      return `intent://pay?${queryString}#Intent;scheme=upi;package=${pkg};end`;
+    }
+  } else {
+    // iOS specific URL schemes
+    if (app === "phonepe") {
+      return `phonepe://pay?${queryString}`;
+    }
+    if (app === "paytm") {
+      return `paytmmp://pay?${queryString}`;
+    }
+    if (app === "gpay") {
+      return `gpay://upi/pay?${queryString}`;
+    }
+  }
+
+  return `upi://pay?${queryString}`;
+}
+
 // Per-day plate count: 0 means "I do not want any plate this day".
 export type PlateSelection = Record<string, number>;
 
