@@ -78,64 +78,75 @@ export default function Page() {
 
   // Fire-and-forget: logs a "lead" row when someone taps a UPI pay link,
   // in case they never come back to submit the form. Never blocks or
-  // cancels the upi:// handoff — a failure here is silently ignored.
+  // cancels the app handoff — uses sendBeacon/keepalive.
   function logLead(paymentApp: string = "Other UPI") {
     try {
-      fetch("/api/lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        keepalive: true,
-        body: JSON.stringify({
-          flat: details.flat.trim(),
-          name: details.name.trim(),
-          email: details.email.trim(),
-          phone: details.phone.trim(),
-          plates,
-          totalPlates: plateTotal,
-          totalAmount: amountTotal,
-          paymentApp,
-        }),
-      }).catch(() => {});
+      const payload = JSON.stringify({
+        flat: details.flat.trim(),
+        name: details.name.trim(),
+        email: details.email.trim(),
+        phone: details.phone.trim(),
+        plates,
+        totalPlates: plateTotal,
+        totalAmount: amountTotal,
+        paymentApp,
+      });
+
+      if (typeof navigator !== "undefined" && navigator.sendBeacon) {
+        const blob = new Blob([payload], { type: "application/json" });
+        navigator.sendBeacon("/api/lead", blob);
+      } else {
+        fetch("/api/lead", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          keepalive: true,
+          body: payload,
+        }).catch(() => {});
+      }
     } catch {
       // ignore
     }
   }
 
-  async function copyText(value: string, key: string) {
-    try {
-      await navigator.clipboard.writeText(value);
-      setCopied((prev) => ({ ...prev, [key]: true }));
-      window.setTimeout(() => {
-        setCopied((prev) => ({ ...prev, [key]: false }));
-      }, 1500);
-    } catch {
-      const textArea = document.createElement("textarea");
-      textArea.value = value;
-      textArea.setAttribute("readonly", "");
-      textArea.style.position = "fixed";
-      textArea.style.left = "-9999px";
-      document.body.appendChild(textArea);
-      textArea.select();
-      try {
-        document.execCommand("copy");
+  function copyText(value: string, key: string) {
+    let success = false;
+    if (typeof navigator !== "undefined" && navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(value).then(() => {
         setCopied((prev) => ({ ...prev, [key]: true }));
         window.setTimeout(() => {
           setCopied((prev) => ({ ...prev, [key]: false }));
         }, 1500);
-      } catch {
-        // ignore copy failure
-      }
+      }).catch(() => {});
+    }
+
+    try {
+      const textArea = document.createElement("textarea");
+      textArea.value = value;
+      textArea.setAttribute("readonly", "");
+      textArea.style.position = "fixed";
+      textArea.style.opacity = "0";
+      textArea.style.left = "-9999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      success = document.execCommand("copy");
       document.body.removeChild(textArea);
+    } catch {
+      // ignore copy failure
+    }
+
+    if (success) {
+      setCopied((prev) => ({ ...prev, [key]: true }));
+      window.setTimeout(() => {
+        setCopied((prev) => ({ ...prev, [key]: false }));
+      }, 1500);
     }
   }
 
-  async function copyAndOpenApp(app: "gpay" | "phonepe" | "paytm") {
-    await copyText(UPI_ID, "upi-id-main");
-    logLead(app === "gpay" ? "GPay" : app === "phonepe" ? "PhonePe" : "Paytm");
-    const launchUrl = buildAppLaunchUrl(app, isAndroid);
-    if (launchUrl && launchUrl !== "#") {
-      window.location.href = launchUrl;
-    }
+  function handleAppLaunch(app: "gpay" | "phonepe" | "paytm") {
+    const appName = app === "gpay" ? "GPay" : app === "phonepe" ? "PhonePe" : "Paytm";
+    logLead(appName);
+    copyText(UPI_ID, "upi-id-main");
   }
 
   function validateAll() {
@@ -515,10 +526,10 @@ export default function Page() {
                       Tap to copy ID &amp; open app:
                     </div>
                     <div className="upi-apps-grid">
-                      <button
-                        type="button"
+                      <a
+                        href={buildAppLaunchUrl("gpay", isAndroid)}
                         className="upi-app-btn"
-                        onClick={() => copyAndOpenApp("gpay")}
+                        onClick={() => handleAppLaunch("gpay")}
                       >
                         <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
                           <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17Z" />
@@ -527,31 +538,31 @@ export default function Page() {
                           <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98Z" />
                         </svg>
                         <span>Google Pay</span>
-                      </button>
+                      </a>
 
-                      <button
-                        type="button"
+                      <a
+                        href={buildAppLaunchUrl("phonepe", isAndroid)}
                         className="upi-app-btn"
-                        onClick={() => copyAndOpenApp("phonepe")}
+                        onClick={() => handleAppLaunch("phonepe")}
                       >
                         <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
                           <rect width="24" height="24" rx="6" fill="#5f259f" />
                           <path d="M16.5 7.5h-5.2c-.3 0-.5.2-.5.5v1.2c0 .3.2.5.5.5h1.2v2.1c-.8 0-1.6.4-2.1 1-.5.7-.6 1.6-.3 2.4.3.8 1.1 1.4 2 1.5.2 0 .4 0 .6-.1v2.4c0 .3.2.5.5.5h1.2c.3 0 .5-.2.5-.5v-4.8h1.6c.3 0 .5-.2.5-.5V12c0-.3-.2-.5-.5-.5h-1.6V9.7h1.6c.3 0 .5-.2.5-.5V8c0-.3-.2-.5-.5-.5Zm-4 6.7c-.5 0-.9-.4-.9-.9s.4-.9.9-.9.9.4.9.9-.4.9-.9.9Z" fill="#fff" />
                         </svg>
                         <span>PhonePe</span>
-                      </button>
+                      </a>
 
-                      <button
-                        type="button"
+                      <a
+                        href={buildAppLaunchUrl("paytm", isAndroid)}
                         className="upi-app-btn"
-                        onClick={() => copyAndOpenApp("paytm")}
+                        onClick={() => handleAppLaunch("paytm")}
                       >
                         <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
                           <rect width="24" height="24" rx="6" fill="#002e6e" />
                           <text x="12" y="15.5" fill="#00b9f5" fontSize="8.5" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">paytm</text>
                         </svg>
                         <span>Paytm</span>
-                      </button>
+                      </a>
                     </div>
                   </>
                 ) : (

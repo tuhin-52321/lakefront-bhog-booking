@@ -125,15 +125,20 @@ export const UPI_PAYEE_NAME = "Lakefront Socio Cultural Society";
 // so the user can easily paste the copied UPI ID.
 export function buildAppLaunchUrl(
   app: "gpay" | "phonepe" | "paytm",
-  isAndroid: boolean
+  isAndroid?: boolean
 ): string {
-  if (isAndroid) {
+  const isAndroidDevice =
+    typeof isAndroid === "boolean"
+      ? isAndroid
+      : typeof navigator !== "undefined" && /Android/i.test(navigator.userAgent || "");
+
+  if (isAndroidDevice) {
     const packages: Record<string, string> = {
       gpay: "com.google.android.apps.nbu.paisa.user",
       phonepe: "com.phonepe.app",
       paytm: "net.one97.paytm",
     };
-    return `intent://#Intent;package=${packages[app]};end`;
+    return `intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=${packages[app]};end`;
   }
   if (app === "phonepe") return "phonepe://";
   if (app === "paytm") return "paytmmp://";
