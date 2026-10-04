@@ -41,7 +41,7 @@ export default function Page() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [submitError, setSubmitError] = useState("");
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState<{ [key: string]: boolean }>({});
 
   const detailsRef = useRef<HTMLDivElement>(null);
   const bookingRef = useRef<HTMLDivElement>(null);
@@ -88,16 +88,16 @@ export default function Page() {
     }
   }
 
-  async function copyUpiId() {
-    const upiId = "mab.037349041620055@axisbank";
+  async function copyText(value: string, key: string) {
     try {
-      await navigator.clipboard.writeText(upiId);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1500);
+      await navigator.clipboard.writeText(value);
+      setCopied((prev) => ({ ...prev, [key]: true }));
+      window.setTimeout(() => {
+        setCopied((prev) => ({ ...prev, [key]: false }));
+      }, 1500);
     } catch {
-      // fallback: create a temporary textarea for copy support
       const textArea = document.createElement("textarea");
-      textArea.value = upiId;
+      textArea.value = value;
       textArea.setAttribute("readonly", "");
       textArea.style.position = "fixed";
       textArea.style.left = "-9999px";
@@ -105,8 +105,10 @@ export default function Page() {
       textArea.select();
       try {
         document.execCommand("copy");
-        setCopied(true);
-        window.setTimeout(() => setCopied(false), 1500);
+        setCopied((prev) => ({ ...prev, [key]: true }));
+        window.setTimeout(() => {
+          setCopied((prev) => ({ ...prev, [key]: false }));
+        }, 1500);
       } catch {
         // ignore copy failure
       }
@@ -415,25 +417,169 @@ export default function Page() {
             </span>
           </p>
           <div className="bank-details">
-            Account name: {BANK_DETAILS.accountName}
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, flexWrap: "nowrap" }}>
+              <span>Account name: {BANK_DETAILS.accountName}</span>
+            </div>
             <br />
-            Bank: {BANK_DETAILS.bank}
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, flexWrap: "nowrap" }}>
+              <span>Bank: {BANK_DETAILS.bank}</span>
+            </div>
             <br />
-            A/c No.: {BANK_DETAILS.accountNumber}
-            <br />
-            IFSC: {BANK_DETAILS.ifsc}
-            <br />
-            <span style={{ display: "inline-flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-              <span>UPI ID: mab.037349041620055@axisbank</span>
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                flexWrap: "nowrap",
+                whiteSpace: "nowrap",
+                maxWidth: "100%",
+                overflow: "hidden",
+              }}
+            >
+              <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+                A/c No.: {BANK_DETAILS.accountNumber}
+              </span>
               <button
                 type="button"
-                className="btn btn-secondary"
-                onClick={copyUpiId}
-                style={{ padding: "6px 10px", fontSize: "0.8rem", borderRadius: 8 }}
+                onClick={() => copyText(BANK_DETAILS.accountNumber, "account-number")}
+                aria-label="Copy account number"
+                title={copied["account-number"] ? "Copied" : "Copy account number"}
+                style={{
+                  padding: 0,
+                  margin: 0,
+                  border: "none",
+                  background: "transparent",
+                  color: "var(--purple-dark)",
+                  fontSize: "0.9rem",
+                  borderRadius: 0,
+                  flexShrink: 0,
+                  minWidth: 18,
+                  width: 18,
+                  height: 18,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  lineHeight: 1,
+                }}
               >
-                {copied ? "Copied" : "Copy"}
+                {copied["account-number"] ? (
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M5 12.5 9.5 17 19 7.5" />
+                  </svg>
+                ) : (
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="9" y="9" width="11" height="11" rx="2" />
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  </svg>
+                )}
               </button>
             </span>
+            <br />
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                flexWrap: "nowrap",
+                whiteSpace: "nowrap",
+                maxWidth: "100%",
+                overflow: "hidden",
+              }}
+            >
+              <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+                IFSC: {BANK_DETAILS.ifsc}
+              </span>
+              <button
+                type="button"
+                onClick={() => copyText(BANK_DETAILS.ifsc, "ifsc")}
+                aria-label="Copy IFSC code"
+                title={copied["ifsc"] ? "Copied" : "Copy IFSC code"}
+                style={{
+                  padding: 0,
+                  margin: 0,
+                  border: "none",
+                  background: "transparent",
+                  color: "var(--purple-dark)",
+                  fontSize: "0.9rem",
+                  borderRadius: 0,
+                  flexShrink: 0,
+                  minWidth: 18,
+                  width: 18,
+                  height: 18,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  lineHeight: 1,
+                }}
+              >
+                {copied["ifsc"] ? (
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M5 12.5 9.5 17 19 7.5" />
+                  </svg>
+                ) : (
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="9" y="9" width="11" height="11" rx="2" />
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  </svg>
+                )}
+              </button>
+            </span>
+            <br />
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                flexWrap: "nowrap",
+                whiteSpace: "nowrap",
+                maxWidth: "100%",
+                overflow: "hidden",
+              }}
+            >
+              <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+                UPI ID: mab.037349041620055@axisbank
+              </span>
+              <button
+                type="button"
+                onClick={() => copyText("mab.037349041620055@axisbank", "upi-id")}
+                aria-label="Copy UPI ID"
+                title={copied["upi-id"] ? "Copied" : "Copy UPI ID"}
+                style={{
+                  padding: 0,
+                  margin: 0,
+                  border: "none",
+                  background: "transparent",
+                  color: "var(--purple-dark)",
+                  fontSize: "0.9rem",
+                  borderRadius: 0,
+                  flexShrink: 0,
+                  minWidth: 18,
+                  width: 18,
+                  height: 18,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  lineHeight: 1,
+                }}
+              >
+                {copied["upi-id"] ? (
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M5 12.5 9.5 17 19 7.5" />
+                  </svg>
+                ) : (
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="9" y="9" width="11" height="11" rx="2" />
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  </svg>
+                )}
+              </button>
+            </span>
+              <div style={{ marginTop: 8, fontSize: "0.78rem", fontStyle: "italic", color: "var(--muted)" }}>
+                Tap the copy icon to copy the values.
+              </div>
           </div>
           <div className="qr-wrap">
             <div className="qr-frame">
