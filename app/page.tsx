@@ -149,6 +149,28 @@ export default function Page() {
     copyText(UPI_ID, "upi-id-main");
   }
 
+  async function saveQrImage() {
+    try {
+      const res = await fetch("/upi-qr.png");
+      const blob = await res.blob();
+      const file = new File([blob], "Lakefront-Bhog-UPI-QR.png", { type: "image/png" });
+      if (typeof navigator !== "undefined" && navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+        });
+        return;
+      }
+    } catch (e: any) {
+      if (e?.name === "AbortError") return;
+    }
+    const a = document.createElement("a");
+    a.href = "/upi-qr.png";
+    a.download = "Lakefront-Bhog-UPI-QR.png";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
   function validateAll() {
     const e: Record<string, string> = {};
     if (!details.flat.trim()) e.flat = "Flat number is required.";
@@ -446,9 +468,9 @@ export default function Page() {
             {/* If amount <= 2000: Offer Save to Gallery */}
             {amountTotal > 0 && amountTotal <= 2000 && (
               <div style={{ marginTop: 10 }}>
-                <a
-                  href="/upi-qr.png"
-                  download="Lakefront-Bhog-UPI-QR.png"
+                <button
+                  type="button"
+                  onClick={saveQrImage}
                   className="qr-download-btn"
                 >
                   <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -457,9 +479,10 @@ export default function Page() {
                     <line x1="12" y1="15" x2="12" y2="3" />
                   </svg>
                   <span>Save QR to Gallery / Photos</span>
-                </a>
-                <div style={{ fontSize: "0.78rem", color: "#666", marginTop: 6, maxWidth: 300, marginInline: "auto", lineHeight: 1.4 }}>
-                  💡 In Google Pay, PhonePe, or Paytm: tap <strong>Scan QR</strong> ➔ tap the <strong>Gallery/Photo icon</strong> ➔ select this QR.
+                </button>
+                <div style={{ fontSize: "0.78rem", color: "#666", marginTop: 8, maxWidth: 320, marginInline: "auto", lineHeight: 1.45 }}>
+                  💡 <strong>iPhone / iOS:</strong> Press &amp; hold the QR code above ➔ tap <strong>&quot;Save to Photos&quot;</strong> (or tap button to share).<br />
+                  💡 <strong>Android:</strong> Tap the button to download directly to Gallery.
                 </div>
               </div>
             )}
