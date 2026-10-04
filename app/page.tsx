@@ -41,6 +41,7 @@ export default function Page() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [submitError, setSubmitError] = useState("");
+  const [copied, setCopied] = useState(false);
 
   const detailsRef = useRef<HTMLDivElement>(null);
   const bookingRef = useRef<HTMLDivElement>(null);
@@ -84,6 +85,32 @@ export default function Page() {
       }).catch(() => {});
     } catch {
       // ignore
+    }
+  }
+
+  async function copyUpiId() {
+    const upiId = "mab.037349041620055@axisbank";
+    try {
+      await navigator.clipboard.writeText(upiId);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // fallback: create a temporary textarea for copy support
+      const textArea = document.createElement("textarea");
+      textArea.value = upiId;
+      textArea.setAttribute("readonly", "");
+      textArea.style.position = "fixed";
+      textArea.style.left = "-9999px";
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand("copy");
+        setCopied(true);
+        window.setTimeout(() => setCopied(false), 1500);
+      } catch {
+        // ignore copy failure
+      }
+      document.body.removeChild(textArea);
     }
   }
 
@@ -395,6 +422,18 @@ export default function Page() {
             A/c No.: {BANK_DETAILS.accountNumber}
             <br />
             IFSC: {BANK_DETAILS.ifsc}
+            <br />
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+              <span>UPI ID: mab.037349041620055@axisbank</span>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={copyUpiId}
+                style={{ padding: "6px 10px", fontSize: "0.8rem", borderRadius: 8 }}
+              >
+                {copied ? "Copied" : "Copy"}
+              </button>
+            </span>
           </div>
           <div className="qr-wrap">
             <div className="qr-frame">
