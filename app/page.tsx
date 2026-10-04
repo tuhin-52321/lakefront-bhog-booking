@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   DAYS,
   PRICE,
@@ -12,6 +12,7 @@ import {
   totalPlates,
   totalAmount,
   buildUpiPayUrl,
+  UPI_ID,
 } from "@/lib/days";
 
 type Details = {
@@ -42,6 +43,15 @@ export default function Page() {
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [submitError, setSubmitError] = useState("");
   const [copied, setCopied] = useState<{ [key: string]: boolean }>({});
+  const [isPhone, setIsPhone] = useState(false);
+
+  useEffect(() => {
+    const ua = typeof navigator !== "undefined" ? navigator.userAgent || "" : "";
+    const isMobilePhone =
+      /Android|iPhone|iPod|BlackBerry|IEMobile|Opera Mini|webOS/i.test(ua) ||
+      Boolean((navigator as any)?.userAgentData?.mobile);
+    setIsPhone(isMobilePhone);
+  }, []);
 
   const detailsRef = useRef<HTMLDivElement>(null);
   const bookingRef = useRef<HTMLDivElement>(null);
@@ -379,36 +389,38 @@ export default function Page() {
           </table>
 
           <p style={{ marginTop: 18, marginBottom: 6 }}>
-            Pay <strong>₹{amountTotal}</strong> by any UPI app — tap the
-            button below on your phone, or scan the QR code from any upi app — or by bank
-            transfer.
+            Pay <strong>₹{amountTotal}</strong>{" "}
+            {isPhone
+              ? "by any UPI app — tap the button below, or scan the QR code — or by bank transfer."
+              : "by scanning the QR code with any UPI app, or by bank transfer."}
           </p>
-          {amountTotal > 0 ? (
-            <div className="upi-pay-wrap">
-              <a
-                className="btn btn-primary upi-pay-btn"
-                href={buildUpiPayUrl(amountTotal, upiNote)}
-                onClick={logLead}
-              >
-                Pay ₹{amountTotal} via UPI app
-              </a>
-              <p className="hint" style={{ marginTop: 6, marginBottom: 0 }}>
-                Opens your UPI app directly on a phone (Google Pay, PhonePe,
-                Paytm, etc.). On a computer, use the QR code below instead.
-              </p>
-            </div>
-          ) : (
-            <div className="upi-pay-wrap">
-              <button
-                className="btn btn-primary upi-pay-btn"
-                type="button"
-                disabled
-                aria-disabled="true"
-                style={{ opacity: 0.7, cursor: "not-allowed" }}
-              >
-                Select at least one plate to pay
-              </button>
-            </div>
+          {isPhone && (
+            amountTotal > 0 ? (
+              <div className="upi-pay-wrap">
+                <a
+                  className="btn btn-primary upi-pay-btn"
+                  href={buildUpiPayUrl(amountTotal, upiNote)}
+                  onClick={logLead}
+                >
+                  Pay ₹{amountTotal} via UPI app
+                </a>
+                <p className="hint" style={{ marginTop: 6, marginBottom: 0 }}>
+                  Opens your UPI app directly (Google Pay, PhonePe, Paytm, etc.).
+                </p>
+              </div>
+            ) : (
+              <div className="upi-pay-wrap">
+                <button
+                  className="btn btn-primary upi-pay-btn"
+                  type="button"
+                  disabled
+                  aria-disabled="true"
+                  style={{ opacity: 0.7, cursor: "not-allowed" }}
+                >
+                  Select at least one plate to pay
+                </button>
+              </div>
+            )
           )}
           <p style={{ marginTop: 12, marginBottom: 6 }}>
             After your payment is done, note the UTR / UPI transaction reference and enter it below to complete your booking.
@@ -539,11 +551,11 @@ export default function Page() {
               }}
             >
               <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
-                UPI ID: mab.037349041620055@axisbank
+                UPI ID: {UPI_ID}
               </span>
               <button
                 type="button"
-                onClick={() => copyText("mab.037349041620055@axisbank", "upi-id")}
+                onClick={() => copyText(UPI_ID, "upi-id")}
                 aria-label="Copy UPI ID"
                 title={copied["upi-id"] ? "Copied" : "Copy UPI ID"}
                 style={{

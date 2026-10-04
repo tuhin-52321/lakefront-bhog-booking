@@ -118,7 +118,7 @@ export const BANK_DETAILS = {
 // The society's real merchant UPI ID (VPA), decoded from the same UPI QR
 // code already used for collections (public/upi-qr.png) rather than typed
 // in separately — so it's guaranteed to match what the QR already pays into.
-export const UPI_ID = "037349041620055@AXISBANK";
+export const UPI_ID = "mab.037349041620055@axisbank";
 export const UPI_PAYEE_NAME = "Lakefront Socio Cultural Society";
 
 // Builds a `upi://pay` deep link that opens directly in the user's UPI app
@@ -134,7 +134,7 @@ export function buildUpiPayUrl(amount: number, note: string): string {
     cu: "INR",
     tn: note,
   });
-  return `upi://pay?${params.toString()}`;
+  return `upi://pay?${params.toString().replace(/\+/g, "%20")}`;
 }
 
 // Per-day plate count: 0 means "I do not want any plate this day".
