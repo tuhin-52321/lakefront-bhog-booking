@@ -58,6 +58,7 @@ export default function Page() {
   const detailsRef = useRef<HTMLDivElement>(null);
   const bookingRef = useRef<HTMLDivElement>(null);
   const utrRef = useRef<HTMLDivElement>(null);
+  const isSubmittingRef = useRef(false);
 
   const plateTotal = useMemo(() => totalPlates(plates), [plates]);
   const amountTotal = useMemo(() => totalAmount(plates), [plates]);
@@ -187,6 +188,7 @@ export default function Page() {
   }
 
   async function submit() {
+    if (isSubmittingRef.current) return;
     const e = validateAll();
     setErrors(e);
     if (Object.keys(e).length > 0) {
@@ -199,6 +201,7 @@ export default function Page() {
       target.current?.scrollIntoView({ behavior: "smooth", block: "start" });
       return;
     }
+    isSubmittingRef.current = true;
     setSubmitState("submitting");
     setSubmitError("");
     try {
@@ -223,6 +226,7 @@ export default function Page() {
       }
       setSubmitState("success");
     } catch (err: any) {
+      isSubmittingRef.current = false;
       setSubmitState("error");
       setSubmitError(err.message || "Something went wrong. Please try again.");
     }
@@ -827,6 +831,11 @@ export default function Page() {
               className="btn btn-primary"
               onClick={submit}
               disabled={submitState === "submitting"}
+              style={{
+                pointerEvents: submitState === "submitting" ? "none" : "auto",
+                cursor: submitState === "submitting" ? "not-allowed" : "pointer",
+                opacity: submitState === "submitting" ? 0.75 : 1,
+              }}
             >
               {submitState === "submitting" ? "Submitting…" : "Submit booking"}
             </button>

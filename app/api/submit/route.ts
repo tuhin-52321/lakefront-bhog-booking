@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { DAYS, PRICE } from "@/lib/days";
 
 export const runtime = "nodejs";
+export const maxDuration = 60;
 
 const PHONE_RE = /^[6-9][0-9]{9}$/;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -89,6 +90,10 @@ export async function POST(req: NextRequest) {
     try {
       data = JSON.parse(text);
     } catch {
+      console.error("Booking service returned non-JSON response:", {
+        status: upstream.status,
+        text: text.slice(0, 1000),
+      });
       // Apps Script sometimes wraps errors in HTML; treat non-JSON as failure.
       return NextResponse.json(
         { ok: false, error: "Booking service returned an unexpected response." },
@@ -97,6 +102,10 @@ export async function POST(req: NextRequest) {
     }
 
     if (!upstream.ok || !data.ok) {
+      console.error("Booking service rejected submission:", {
+        status: upstream.status,
+        data,
+      });
       return NextResponse.json(
         { ok: false, error: data.error || "Booking service rejected the submission." },
         { status: 502 }
@@ -105,6 +114,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ ok: true });
   } catch (err: any) {
+    console.error("Error communicating with booking service:", err);
     return NextResponse.json(
       { ok: false, error: "Could not reach the booking service. Please try again." },
       { status: 502 }
