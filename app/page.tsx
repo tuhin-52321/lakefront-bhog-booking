@@ -606,6 +606,10 @@ export default function Page() {
                         </span>
                       </a>
                     </div>
+
+                    <div style={{ marginTop: 10, fontSize: "0.8rem", color: "#555", background: "#fbfbfc", border: "1px solid #e0e0e0", borderRadius: 8, padding: "8px 12px", lineHeight: 1.45, textAlign: "left" }}>
+                      💡 <strong>Note:</strong> If the app does not open, click on <strong>&quot;Copy UPI ID&quot;</strong> above, then switch to your UPI app yourself and paste the ID.
+                    </div>
                   </>
                 ) : (
                   <div style={{ marginTop: 10 }}>

@@ -133,13 +133,17 @@ export function buildAppLaunchUrl(
       : typeof navigator !== "undefined" && /Android/i.test(navigator.userAgent || "");
 
   if (isAndroidDevice) {
-    const packages: Record<string, string> = {
-      gpay: "com.google.android.apps.nbu.paisa.user",
-      phonepe: "com.phonepe.app",
-      paytm: "net.one97.paytm",
-    };
-    return `intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=${packages[app]};end`;
+    if (app === "phonepe") {
+      return "intent://pay#Intent;scheme=phonepe;package=com.phonepe.app;end";
+    }
+    if (app === "gpay") {
+      return "https://gpay.app.goo.gl";
+    }
+    if (app === "paytm") {
+      return "paytmmp://";
+    }
   }
+
   if (app === "phonepe") return "phonepe://";
   if (app === "paytm") return "paytmmp://";
   if (app === "gpay") return "gpay://";
