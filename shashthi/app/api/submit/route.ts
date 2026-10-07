@@ -76,48 +76,60 @@ export async function POST(req: NextRequest) {
     remarks: remarks ? String(remarks).trim() : "",
   };
 
-  try {
-    const upstream = await fetch(webAppUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-      // Apps Script Web Apps issue a redirect (302) to the actual execution URL.
-      redirect: "follow",
-    });
+  const maxAttempts = 2;
+  let lastError = "Could not reach the booking service. Please try again.";
 
-    const text = await upstream.text();
-    let data: any = {};
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      data = JSON.parse(text);
-    } catch {
-      console.error("Booking service returned non-JSON response:", {
-        status: upstream.status,
-        text: text.slice(0, 1000),
+      const upstream = await fetch(webAppUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        // Apps Script Web Apps issue a redirect (302) to the actual execution URL.
+        redirect: "follow",
       });
-      // Apps Script sometimes wraps errors in HTML; treat non-JSON as failure.
-      return NextResponse.json(
-        { ok: false, error: "Booking service returned an unexpected response." },
-        { status: 502 }
-      );
-    }
 
-    if (!upstream.ok || !data.ok) {
-      console.error("Booking service rejected submission:", {
-        status: upstream.status,
-        data,
-      });
-      return NextResponse.json(
-        { ok: false, error: data.error || "Booking service rejected the submission." },
-        { status: 502 }
-      );
-    }
+      const text = await upstream.text();
+      let data: any = {};
+      try {
+        data = JSON.parse(text);
+      } catch {
+        console.error(`Attempt ${attempt}: Booking service returned non-JSON response:`, {
+          status: upstream.status,
+          text: text.slice(0, 500),
+        });
+        lastError = "Booking service returned an unexpected response.";
+        if (attempt < maxAttempts) {
+          await new Promise((r) => setTimeout(r, 1000));
+          continue;
+        }
+        return NextResponse.json({ ok: false, error: lastError }, { status: 502 });
+      }
 
-    return NextResponse.json({ ok: true });
-  } catch (err: any) {
-    console.error("Error communicating with booking service:", err);
-    return NextResponse.json(
-      { ok: false, error: "Could not reach the booking service. Please try again." },
-      { status: 502 }
-    );
+      if (!upstream.ok || !data.ok) {
+        console.error(`Attempt ${attempt}: Booking service rejected submission:`, {
+          status: upstream.status,
+          data,
+        });
+        lastError = data.error || "Booking service rejected the submission.";
+        if (data.error === "Unauthorized" || attempt >= maxAttempts) {
+          return NextResponse.json({ ok: false, error: lastError }, { status: 502 });
+        }
+        await new Promise((r) => setTimeout(r, 1000));
+        continue;
+      }
+
+      return NextResponse.json({ ok: true });
+    } catch (err: any) {
+      console.error(`Attempt ${attempt}: Error communicating with booking service:`, err);
+      lastError = "Could not reach the booking service. Please try again.";
+      if (attempt < maxAttempts) {
+        await new Promise((r) => setTimeout(r, 1000));
+        continue;
+      }
+      return NextResponse.json({ ok: false, error: lastError }, { status: 502 });
+    }
   }
+
+  return NextResponse.json({ ok: false, error: lastError }, { status: 502 });
 }
