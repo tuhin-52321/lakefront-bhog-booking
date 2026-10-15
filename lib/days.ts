@@ -69,9 +69,21 @@ export const MENU_NOTE = "tentative — may change";
 // this is just a short placeholder so the date gap between 18 and 20 doesn't
 // read as a mistake. Puja-day activities for the 19th go out separately.
 export const FREE_BHOG_DAY = {
-  label: "Mon, 19 Oct",
-  note: "No paid Bhog on this day — look out for a separate communication about Puja Day activities.",
-  afterDayKey: "ashtami", // render this note right after this DAYS entry
+  key: "sandhi-puja",
+  label: "Mon, 19 Oct — Sandhi Puja",
+  date: "19 Oct",
+  tithi: "Sandhi Puja",
+  isFree: true,
+  badge: "Free Bhog (Complimentary)",
+  note: "Complimentary Free Bhog on the auspicious occasion of Sandhi Puja! Served during lunch outside Party Hall 2 on a first-come, first-served basis (limited stock only).",
+  afterDayKey: "ashtami",
+  menu: [
+    "Khichuri",
+    "Labra",
+    "Tomato Khejur Chutney",
+    "Papad",
+    "Bonde / Payesh",
+  ],
 };
 
 // Short, plain-language descriptions for dishes that first-time readers may
@@ -91,6 +103,7 @@ export const DISH_GLOSSARY: Record<string, string> = {
   "Cholar Dal": "Bengal-gram lentils cooked sweet-savoury, often with coconut.",
   "Navratan Korma": "Mixed vegetables and paneer in a rich, creamy gravy.",
   "Veg Pulao": "Lightly spiced rice cooked with mixed vegetables.",
+  "Chanar Dal": "Lentils cooked with delicate cottage-cheese (paneer) cubes.",
   "Paneer Butter Masala": "Cottage cheese in a creamy tomato-butter gravy.",
   "Veg Pakoda": "Mixed vegetable fritters.",
   "Pineapple Chutney": "Sweet-and-tangy pineapple chutney.",
@@ -100,8 +113,9 @@ export const DISH_GLOSSARY: Record<string, string> = {
   "Veg Chop": "Spiced vegetable croquette, breaded and fried.",
   "Mishti Doi": "Sweetened, set yogurt — a classic Bengali dessert.",
   Lengcha: "Elongated, soft milk-based sweet soaked in sugar syrup.",
-  Khichuri: "Rice and lentils cooked together with spices — soft and comforting.",
-  Labra: "Mixed-vegetable curry, a classic khichuri side.",
+  Khichuri: "Rice and lentils cooked together with spices.",
+  Labra: "Mixed-vegetable curry, served with the khichuri.",
+  "Bonde / Payesh": "Dessert: syrup-soaked bonde or traditional Bengali rice payesh (pudding).",
   "Bandhakopir Tarkari": "A light cabbage curry.",
   Beguni: "Deep-fried, batter-coated eggplant slices.",
   "Mango Chutney": "Sweet-and-tangy mango chutney.",

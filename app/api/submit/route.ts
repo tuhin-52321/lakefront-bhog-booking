@@ -7,7 +7,20 @@ export const maxDuration = 60;
 const PHONE_RE = /^[6-9][0-9]{9}$/;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+const BOOKING_CLOSED = true;
+
 export async function POST(req: NextRequest) {
+  if (BOOKING_CLOSED) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error:
+          "Booking is closed, please come to venue during lunch for spot booking - limited stock only.",
+      },
+      { status: 400 }
+    );
+  }
+
   const webAppUrl = process.env.SHEETS_WEBAPP_URL;
   const secret = process.env.SUBMIT_SECRET;
 
